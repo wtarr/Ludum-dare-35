@@ -12,8 +12,6 @@ module LD35 {
             this.state.start('Main');
 
         }
-
-        
     }
 }
 

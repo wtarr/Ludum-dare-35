@@ -78,8 +78,6 @@ module LD35 {
                     //this.game.world.add(s);
                 }
 
-                
-
             }
 
             //debugger;
