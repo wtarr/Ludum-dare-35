@@ -23,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.css" />
+    <Content Include="app\out\ld35.js" />
     <Content Include="assets\leveltiles.png" />
     <Content Include="assets\spritebasic.png" />
     <Content Include="index.html" />
@@ -43,6 +44,7 @@
     <TypeScriptCompile Include="app\game.ts" />
     <TypeScriptCompile Include="app\hero.ts" />
     <TypeScriptCompile Include="app\maingame.ts" />
+    <TypeScriptCompile Include="app\references.ts" />
     <TypeScriptCompile Include="lib\ts\p2.d.ts" />
     <TypeScriptCompile Include="lib\ts\phaser.comments.d.ts" />
     <TypeScriptCompile Include="lib\ts\pixi.comments.d.ts" />
@@ -81,9 +83,9 @@
     <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
     <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
     <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
-    <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
-    <TypeScriptOutFile>
-    </TypeScriptOutFile>
+    <TypeScriptModuleKind>
+    </TypeScriptModuleKind>
+    <TypeScriptOutFile>F:\Documents\GitHub\Ludum-dare-35\Ludum-dare-35\app\out\ld35.js</TypeScriptOutFile>
     <TypeScriptOutDir />
     <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
     <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>

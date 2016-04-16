@@ -5,6 +5,51 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var LD35;
 (function (LD35) {
+    var Hero = (function (_super) {
+        __extends(Hero, _super);
+        function Hero(gameReference, x, y, key, frame) {
+            _super.call(this, gameReference, x, y, key, frame);
+            this.game = gameReference;
+            this.game.physics.enable(this, Phaser.Physics.ARCADE);
+            this.anchor.setTo(0.5, 0.5);
+            this.body.gravity.y = 200;
+            this.body.collideWorldBounds = true;
+            this.maxShapes = 4;
+            this.shapeindex = 0;
+            this.frame = this.shapeindex;
+            this.shapeshifttimer = 0;
+            this.heroJumptimer = 0;
+            this.game.add.existing(this);
+            this.game.camera.follow(this);
+        }
+        Hero.prototype.update = function () {
+            // zero out the velocity every loop
+            this.body.velocity.x = 0;
+            if (this.game.input.keyboard.isDown(Phaser.Keyboard.D) || this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
+                this.body.velocity.x = 150;
+            }
+            else if (this.game.input.keyboard.isDown(Phaser.Keyboard.A) || this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
+                this.body.velocity.x -= 150;
+            }
+            if (this.game.input.keyboard.isDown(Phaser.Keyboard.W) || this.game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
+                if (this.body.touching.down && this.game.time.now > this.heroJumptimer) {
+                    this.body.velocity.y = -150;
+                    this.heroJumptimer = this.game.time.now + 150;
+                }
+            }
+            if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && this.game.time.now > this.shapeshifttimer) {
+                this.shapeindex = (this.shapeindex + 1) % this.maxShapes; // use modulus to wrap
+                this.frame = this.shapeindex;
+                this.shapeshifttimer = this.game.time.now + 250;
+            }
+        };
+        return Hero;
+    }(Phaser.Sprite));
+    LD35.Hero = Hero;
+})(LD35 || (LD35 = {}));
+/// <reference path="references.ts"/>
+var LD35;
+(function (LD35) {
     var Level = (function (_super) {
         __extends(Level, _super);
         function Level() {
@@ -67,4 +112,25 @@ var LD35;
     }(Level));
     LD35.MainGame = MainGame;
 })(LD35 || (LD35 = {}));
-//# sourceMappingURL=maingame.js.map
+/// <reference path="game.ts"/>
+/// <reference path="hero.ts"/>
+/// <reference path="maingame.ts"/> 
+/// <reference path="../lib/ts/phaser.comments.d.ts"/>
+/// <reference path="references.ts"/>
+var LD35;
+(function (LD35) {
+    var Game = (function (_super) {
+        __extends(Game, _super);
+        function Game() {
+            _super.call(this, { width: 640, height: 480, renderer: Phaser.AUTO, parent: 'content', state: null });
+            this.state.add('Main', LD35.MainGame);
+            this.state.start('Main');
+        }
+        return Game;
+    }(Phaser.Game));
+    LD35.Game = Game;
+})(LD35 || (LD35 = {}));
+window.onload = function () {
+    var game = new LD35.Game();
+};
+//# sourceMappingURL=ld35.js.map
