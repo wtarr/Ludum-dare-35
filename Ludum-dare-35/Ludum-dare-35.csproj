@@ -43,7 +43,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="app\game.ts" />
     <TypeScriptCompile Include="app\hero.ts" />
-    <TypeScriptCompile Include="app\maingame.ts" />
+    <TypeScriptCompile Include="app\level1.ts" />
     <TypeScriptCompile Include="app\references.ts" />
     <TypeScriptCompile Include="lib\ts\p2.d.ts" />
     <TypeScriptCompile Include="lib\ts\phaser.comments.d.ts" />

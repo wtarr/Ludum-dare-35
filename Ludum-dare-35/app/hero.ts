@@ -1,13 +1,25 @@
 ﻿
 module LD35 {
+    export enum Shape {
+        Circle = 0,
+        Square = 1,
+        Triangle = 2,
+        Star = 3
+    }
+
+
     export class Hero extends Phaser.Sprite {
 
         game: Phaser.Game;
-        shapeindex: number;
+        shapeindex: Shape;
         maxShapes: number;
         shapeshifttimer: number;
 
         heroJumptimer: number;
+
+        getCurrentShape(): Shape {
+            return this.shapeindex;
+        }
 
         constructor(gameReference: Phaser.Game, x: number, y: number, key: string, frame: number) {
 
@@ -20,7 +32,7 @@ module LD35 {
             this.body.gravity.y = 200;
             this.body.collideWorldBounds = true;
             this.maxShapes = 4;
-            this.shapeindex = 0;
+            this.shapeindex = Shape.Circle;
             this.frame = this.shapeindex;
             this.shapeshifttimer = 0;
             this.heroJumptimer = 0;
