@@ -4,6 +4,7 @@ module LD35 {
 
     
     export class Level extends Phaser.State {
+        gateOpen = false;
 
         platformCollidableTileGroup: Phaser.Group; // collidable tiles lets say ...
         platformNonCollidableTileGroup: Phaser.Group;
@@ -34,20 +35,20 @@ module LD35 {
                 if (json.layers[level].data[i] === 1) {
                     var temp = this.platformCollidableTileGroup.create(col * tileWidth, row * tileHeight, "tiles", 0);
                     temp.body.immovable = true;
-                } else if (json.layers[level].data[i] === 9) {
-                    var non = this.platformNonCollidableTileGroup.create(col * tileWidth, row * tileHeight, "tiles", 8);
+                } else if (json.layers[level].data[i] === 17) { // red triangle
+                    var non = this.platformNonCollidableTileGroup.create(col * tileWidth, row * tileHeight, "tiles", 16);
                     non.body.immovable = true;
                 }
-                else if (json.layers[level].data[i] === 7) {
-                    var gate = this.platformGateTileGroup.create(col * tileWidth, row * tileHeight, "tiles", 6);
+                else if (json.layers[level].data[i] === 11) {
+                    var gate = this.platformGateTileGroup.create(col * tileWidth, row * tileHeight, "tiles", 10);
                     gate.body.immovable = true;
                 }
-                else if (json.layers[level].data[i] === 11) {
+                else if (json.layers[level].data[i] === 19) {
                     //var gate = this.platformGateTileGroup.create(col * tileWidth, row * tileHeight, "tiles", 10);
                     //gate.body.immovable = true;
 
                     
-                    this.exit = this.game.add.sprite(col * tileWidth, row * tileHeight, "tiles", 10);
+                    this.exit = this.game.add.sprite(col * tileWidth, row * tileHeight, "tiles", 18);
                     this.game.physics.arcade.enable(this.exit);
                     this.exit.body.immovable = true;
                     //this.exit.physicsType = Phaser.Physics.ARCADE;
@@ -65,13 +66,7 @@ module LD35 {
 
         json: any;
         
-        preload() {
-            this.game.load.spritesheet("shapes", "assets/spritebasic.png", 32, 32, 4);
-
-            this.game.load.spritesheet("tiles", "assets/leveltiles.png", 32, 32, 16);
-
-            this.game.load.json('map1', 'assets/map1.json');
-        }
+        
 
         create() {
             // enable physics on the game
@@ -124,7 +119,7 @@ module LD35 {
 
             if (shape === Shape.Triangle) {
 
-                this.platformNonCollidableTileGroup.setAll("frame", 9);
+                this.platformNonCollidableTileGroup.setAll("frame", 17);
                 // open the gate to go to next level
 
                 this.game.add.tween(this.platformGateTileGroup).to({ alpha: 0 }, 2000, "Linear", true, 0, 0, false).onComplete.add(this.removeCollide, this);
@@ -132,7 +127,7 @@ module LD35 {
             }
         }
 
-        gateOpen : boolean = false;
+        
 
         removeCollide() {
             this.platformGateTileGroup.setAll("body.enable", false);
@@ -142,7 +137,9 @@ module LD35 {
 
         exitCollide(a: any, b: any) {
             if (this.gateOpen === true) {
-                alert("go to next ->");
+                //alert("go to next ->");
+
+                this.game.state.start('level2', true, false);
             }
         }
     }

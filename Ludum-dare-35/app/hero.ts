@@ -29,7 +29,7 @@ module LD35 {
 
             this.game.physics.enable(this, Phaser.Physics.ARCADE);
             this.anchor.setTo(0.5, 0.5);
-            this.body.gravity.y = 200;
+            this.body.gravity.y = 220;
             this.body.collideWorldBounds = true;
             this.maxShapes = 4;
             this.shapeindex = Shape.Circle;
@@ -56,7 +56,7 @@ module LD35 {
             if (this.game.input.keyboard.isDown(Phaser.Keyboard.W) || this.game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
                 if (this.body.touching.down && this.game.time.now > this.heroJumptimer) {
 
-                    this.body.velocity.y = -150;
+                    this.body.velocity.y = -220;
 
                     this.heroJumptimer = this.game.time.now + 150;
                 }
