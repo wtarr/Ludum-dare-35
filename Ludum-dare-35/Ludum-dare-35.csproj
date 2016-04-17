@@ -24,6 +24,7 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="app\out\ld35.js" />
+    <Content Include="assets\ld35.mp3" />
     <Content Include="assets\leveltiles.png" />
     <Content Include="assets\spritebasic.png" />
     <Content Include="index.html" />

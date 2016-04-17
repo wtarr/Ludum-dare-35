@@ -6,6 +6,7 @@ module LD35 {
             super({ width: 640, height: 480, renderer: Phaser.AUTO, parent: 'content', state: null });
 
             this.state.add("boot", Boot);
+            this.state.add('start', StartScreen);
             this.state.add('level1', Level1);
             this.state.add('level2', Level2);
             this.state.add('level3', Level3);

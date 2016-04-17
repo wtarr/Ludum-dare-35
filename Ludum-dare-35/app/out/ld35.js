@@ -11,6 +11,7 @@ var LD35;
         function Game() {
             _super.call(this, { width: 640, height: 480, renderer: Phaser.AUTO, parent: 'content', state: null });
             this.state.add("boot", LD35.Boot);
+            this.state.add('start', LD35.StartScreen);
             this.state.add('level1', LD35.Level1);
             this.state.add('level2', LD35.Level2);
             this.state.add('level3', LD35.Level3);
@@ -253,7 +254,9 @@ var LD35;
             // console.log();
             this.game.add.text(70, 750, 'WASD or arrow keys for movement', style);
             this.game.add.text(680, 750, 'Space to shape shift', style);
-            //this.game.add.text(900, 720, 'Some objects are moveable', style);
+            var music = this.game.add.audio("ldmp3", 1, true);
+            music.loop = true;
+            music.play();
         };
         Level1.prototype.update = function () {
             // Do collision checks between player and platform
@@ -616,18 +619,22 @@ var LD35;
             _super.apply(this, arguments);
         }
         Boot.prototype.preload = function () {
+            this.game.load.image('start', 'assets/startscreen.png');
             this.game.load.spritesheet("shapes", "assets/spritebasic.png", 32, 32, 8);
             this.game.load.spritesheet("tiles", "assets/leveltiles.png", 32, 32, 64);
             this.game.load.json('map1', 'assets/map1.json');
+            this.game.load.audio('ldogg', 'assets/ld35.ogg');
+            this.game.load.audio('ldmp3', 'assets/ld35.mp3');
         };
         Boot.prototype.create = function () {
             // called after preload so go to next
-            this.game.state.start("level1");
+            this.game.state.start("start");
         };
         return Boot;
     }(Phaser.State));
     LD35.Boot = Boot;
 })(LD35 || (LD35 = {}));
+/// <reference path="references.ts"/>
 var LD35;
 (function (LD35) {
     var StartScreen = (function (_super) {
@@ -635,6 +642,17 @@ var LD35;
         function StartScreen() {
             _super.apply(this, arguments);
         }
+        StartScreen.prototype.create = function () {
+            var _this = this;
+            this.start = false;
+            this.game.add.sprite(0, 0, 'start');
+            this.game.input.keyboard.onDownCallback = function () {
+                if (!_this.start) {
+                    _this.start = true;
+                    _this.game.state.start('level1', true, false);
+                }
+            };
+        };
         return StartScreen;
     }(Phaser.Sprite));
     LD35.StartScreen = StartScreen;
