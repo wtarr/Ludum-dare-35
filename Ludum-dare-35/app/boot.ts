@@ -13,7 +13,7 @@ module LD35 {
         create() {
             // called after preload so go to next
             
-            this.game.state.start("level2");
+            this.game.state.start("level3");
         }
     }
 }

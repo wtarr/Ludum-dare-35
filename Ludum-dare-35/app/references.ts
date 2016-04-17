@@ -5,3 +5,5 @@
 /// <reference path="level.ts"/>
 /// <reference path="level1.ts"/>
 /// <reference path="level2.ts"/>
+/// <reference path="level3.ts"/>
+/// <reference path="finished.ts"/>

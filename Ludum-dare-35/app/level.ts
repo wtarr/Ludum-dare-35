@@ -11,9 +11,19 @@ module LD35 {
 
         platformGuessTileGroup: Phaser.Group;
 
+        platformMovableBlock: Phaser.Group;
+
+        platformL3ClueCollidable: Phaser.Group;
+
+        platformL3SwitchGroup: Phaser.Group;
+
         exit: Phaser.Sprite;
 
         guessArray: {};
+
+        spawnPoint: Phaser.Point;
+
+        shooterBlock : Array<Phaser.Sprite>;
 
         sceneSetup(json: any, level: number) {
             // magic ensues
@@ -28,6 +38,15 @@ module LD35 {
 
             var guessId = 0;
 
+            var switchId = 0;
+            var moveableBlockId = 0;
+
+            var tempBlockRef: Phaser.Sprite;
+
+            this.spawnPoint = new Phaser.Point();
+
+            this.shooterBlock = [];
+
             for (var i = 0; i < json.layers[level].data.length; i++) {
 
                 col = i % width;
@@ -36,12 +55,19 @@ module LD35 {
                     row++;
                 }
 
-                if (json.layers[level].data[i] === 1) {
+                if (json.layers[level].data[i] === 36) {
+                    // set level spawn point
+                    this.spawnPoint.x = col * tileWidth;
+                    this.spawnPoint.y = row * tileHeight;
+                }
+                else if (json.layers[level].data[i] === 1) {
                     var temp = this.platformCollidableTileGroup.create(col * tileWidth, row * tileHeight, "tiles", 0);
                     temp.body.immovable = true;
                 } else if (json.layers[level].data[i] === 17) { // red triangle
-                    var non = this.platformNonCollidableTileGroup.create(col * tileWidth, row * tileHeight, "tiles", 16);
-                    non.body.immovable = true;
+                    if (level === 0) {
+                        var non = this.platformNonCollidableTileGroup.create(col * tileWidth, row * tileHeight, "tiles", 16);
+                        non.body.immovable = true;
+                    }
                 }
                 else if (json.layers[level].data[i] === 11) {
                     var gate = this.platformGateTileGroup.create(col * tileWidth, row * tileHeight, "tiles", 10);
@@ -57,6 +83,29 @@ module LD35 {
                     this.exit.body.immovable = true;
                     //this.exit.physicsType = Phaser.Physics.ARCADE;
 
+                }
+                else if (json.layers[level].data[i] === 18) { // clue level 2
+                    tempBlockRef = this.platformCollidableTileGroup.create(col * tileWidth, row * tileHeight, "tiles", 17);
+                    tempBlockRef.body.immovable = true;
+                }
+                else if (json.layers[level].data[i] === 34) { // clue level 2 
+                    tempBlockRef = this.platformCollidableTileGroup.create(col * tileWidth, row * tileHeight, "tiles", 33);
+                    tempBlockRef.body.immovable = true;
+                }
+                else if (json.layers[level].data[i] === 42) { // clue level 3
+                    tempBlockRef = this.platformCollidableTileGroup.create(col * tileWidth, row * tileHeight, "tiles", 41); // todo make collidable
+                    tempBlockRef.body.immovable = true;
+                }
+                else if (json.layers[level].data[i] === 26) {
+                    tempBlockRef = this.platformCollidableTileGroup.create(col * tileWidth, row * tileHeight, "tiles", 25); // todo make collidable
+                    tempBlockRef.body.immovable = true;
+                }
+                else if (json.layers[level].data[i] === 12) { // non - exitable gate
+                    var nonExit = this.platformCollidableTileGroup.create(col * tileWidth, row * tileHeight, "tiles", 11);
+                    nonExit.body.immovable = true;
+                }
+                else if (json.layers[level].data[i] === 20) { // non - exitable block doesnt need collision
+                    this.game.add.sprite(col * tileWidth, row * tileHeight, "tiles", 19);
                 }
                 else if (json.layers[level].data[i] === 49) {
                     if (this.guessArray == null) {
@@ -76,7 +125,35 @@ module LD35 {
                     //guess.body.checkCollision.right = false;
                     //guess.body.checkCollision.bottom = false;
 
-                    
+
+                }
+                else if (json.layers[level].data[i] === 44) { // switch block
+                    var sw = this.platformL3SwitchGroup.create(col * tileWidth, row * tileHeight, "tiles", 43);
+                    sw.body.immovable = true;
+                    sw.name = switchId;
+                    switchId += 1;
+                }
+                else if (json.layers[level].data[i] === 45) // movable block
+                {
+
+                    var block = this.platformMovableBlock.create(col * tileWidth, row * tileHeight, "tiles", 44);
+                    block.body.immovable = false;
+                    //block.body.checkCollision.right = false;
+                    block.body.checkCollision.top = false;
+                    block.body.gravity.y = 150;
+
+                    block.name = moveableBlockId;
+                    moveableBlockId += 1;
+
+                }
+                else if (json.layers[level].data[i] === 60) // shooter block
+                {
+                    tempBlockRef = this.game.add.sprite(col * tileWidth, row * tileHeight, "tiles", 59);
+
+                    //tempBlockRef.anchor.x = 0.5;
+                    //tempBlockRef.anchor.y = 0.5;
+
+                    this.shooterBlock.push(tempBlockRef);
                 }
             }
         }

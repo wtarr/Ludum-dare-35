@@ -32,7 +32,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="lib\js\phaser.map" />
-    <Content Include="assets\map1.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -42,12 +41,14 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app\boot.ts" />
+    <TypeScriptCompile Include="app\finished.ts" />
     <TypeScriptCompile Include="app\game.ts" />
     <TypeScriptCompile Include="app\guessblock.ts" />
     <TypeScriptCompile Include="app\hero.ts" />
     <TypeScriptCompile Include="app\level.ts" />
     <TypeScriptCompile Include="app\level1.ts" />
     <TypeScriptCompile Include="app\level2.ts" />
+    <TypeScriptCompile Include="app\level3.ts" />
     <TypeScriptCompile Include="app\references.ts" />
     <TypeScriptCompile Include="lib\ts\p2.d.ts" />
     <TypeScriptCompile Include="lib\ts\phaser.comments.d.ts" />

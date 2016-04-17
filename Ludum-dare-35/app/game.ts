@@ -8,9 +8,10 @@ module LD35 {
             this.state.add("boot", Boot);
             this.state.add('level1', Level1);
             this.state.add('level2', Level2);
+            this.state.add('level3', Level3);
+            this.state.add('finish', Finish);
 
             this.state.start('boot');
-
         }
     }
 }
