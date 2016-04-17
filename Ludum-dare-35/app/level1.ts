@@ -41,7 +41,7 @@ module LD35 {
             var style = { font: "12px Arial", fontSize: 15, fill: "#DB9D4B", strokeThickness: 6, stroke: "", align: "center" };
 
             // console.log();
-            this.game.add.text(70, 750, 'WASD or arrow keys for movement', style);
+            this.game.add.text(70, 750, 'W A D or arrow keys for movement', style);
 
             this.game.add.text(680, 750, 'Space to shape shift', style);
 

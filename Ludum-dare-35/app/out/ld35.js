@@ -252,7 +252,7 @@ var LD35;
             this.game.time.events.add(Phaser.Timer.SECOND * 1, this.fireProjectile, this);
             var style = { font: "12px Arial", fontSize: 15, fill: "#DB9D4B", strokeThickness: 6, stroke: "", align: "center" };
             // console.log();
-            this.game.add.text(70, 750, 'WASD or arrow keys for movement', style);
+            this.game.add.text(70, 750, 'W A D or arrow keys for movement', style);
             this.game.add.text(680, 750, 'Space to shape shift', style);
             var music = this.game.add.audio("ldmp3", 1, true);
             music.loop = true;
@@ -594,7 +594,7 @@ var LD35;
         Finish.prototype.create = function () {
             // todo ...
             var style = { font: "12px Arial", fontSize: 15, fill: "#DB9D4B", strokeThickness: 6, stroke: "", align: "center" };
-            var text = this.game.add.text(this.game.canvas.width / 2, this.game.canvas.height / 2, 'You have finished!', style);
+            var text = this.game.add.text(this.game.canvas.width / 2, this.game.canvas.height / 2, 'You have finished!\n\n Thank you for playing.', style);
             text.anchor.set(0.5);
         };
         return Finish;
