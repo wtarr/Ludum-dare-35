@@ -10,9 +10,7 @@ module LD35 {
             this.game.load.spritesheet("tiles", "assets/leveltiles.png", 32, 32, 64);
 
             this.game.load.json('map1', 'assets/map1.json');
-
-            this.game.load.audio('ldogg', 'assets/ld35.ogg');
-
+            
             this.game.load.audio('ldmp3', 'assets/ld35.mp3');
             
         }
