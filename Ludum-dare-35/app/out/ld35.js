@@ -6,28 +6,6 @@ var __extends = (this && this.__extends) || function (d, b) {
 /// <reference path="references.ts"/>
 var LD35;
 (function (LD35) {
-    var Game = (function (_super) {
-        __extends(Game, _super);
-        function Game() {
-            _super.call(this, { width: 640, height: 480, renderer: Phaser.AUTO, parent: 'content', state: null });
-            this.state.add("boot", LD35.Boot);
-            this.state.add('start', LD35.StartScreen);
-            this.state.add('level1', LD35.Level1);
-            this.state.add('level2', LD35.Level2);
-            this.state.add('level3', LD35.Level3);
-            this.state.add('finish', LD35.Finish);
-            this.state.start('boot');
-        }
-        return Game;
-    }(Phaser.Game));
-    LD35.Game = Game;
-})(LD35 || (LD35 = {}));
-window.onload = function () {
-    var game = new LD35.Game();
-};
-/// <reference path="references.ts"/>
-var LD35;
-(function (LD35) {
     (function (Shape) {
         Shape[Shape["Circle"] = 0] = "Circle";
         Shape[Shape["Square"] = 1] = "Square";
@@ -613,6 +591,28 @@ var LD35;
 /// <reference path="references.ts"/>
 var LD35;
 (function (LD35) {
+    var Game = (function (_super) {
+        __extends(Game, _super);
+        function Game() {
+            _super.call(this, { width: 640, height: 480, renderer: Phaser.AUTO, parent: 'content', state: null });
+            this.state.add("boot", LD35.Boot);
+            this.state.add('start', LD35.StartScreen);
+            this.state.add('level1', LD35.Level1);
+            this.state.add('level2', LD35.Level2);
+            this.state.add('level3', LD35.Level3);
+            this.state.add('finish', LD35.Finish);
+            this.state.start('boot');
+        }
+        return Game;
+    }(Phaser.Game));
+    LD35.Game = Game;
+})(LD35 || (LD35 = {}));
+window.onload = function () {
+    var game = new LD35.Game();
+};
+/// <reference path="references.ts"/>
+var LD35;
+(function (LD35) {
     var Boot = (function (_super) {
         __extends(Boot, _super);
         function Boot() {
@@ -623,7 +623,6 @@ var LD35;
             this.game.load.spritesheet("shapes", "assets/spritebasic.png", 32, 32, 8);
             this.game.load.spritesheet("tiles", "assets/leveltiles.png", 32, 32, 64);
             this.game.load.json('map1', 'assets/map1.json');
-            this.game.load.audio('ldogg', 'assets/ld35.ogg');
             this.game.load.audio('ldmp3', 'assets/ld35.mp3');
         };
         Boot.prototype.create = function () {
