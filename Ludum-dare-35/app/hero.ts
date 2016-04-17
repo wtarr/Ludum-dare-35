@@ -1,4 +1,5 @@
-﻿
+﻿/// <reference path="references.ts"/>
+
 module LD35 {
     export enum Shape {
         Circle = 0,
