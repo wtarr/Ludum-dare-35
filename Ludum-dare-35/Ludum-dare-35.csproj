@@ -50,6 +50,7 @@
     <TypeScriptCompile Include="app\level2.ts" />
     <TypeScriptCompile Include="app\level3.ts" />
     <TypeScriptCompile Include="app\references.ts" />
+    <TypeScriptCompile Include="app\startscreen.ts" />
     <TypeScriptCompile Include="lib\ts\p2.d.ts" />
     <TypeScriptCompile Include="lib\ts\phaser.comments.d.ts" />
     <TypeScriptCompile Include="lib\ts\pixi.comments.d.ts" />

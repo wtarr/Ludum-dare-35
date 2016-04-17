@@ -27,14 +27,25 @@ module LD35 {
             this.platformGateTileGroup = this.game.add.group();
             this.platformGateTileGroup.enableBody = true;
             this.platformGateTileGroup.physicsBodyType = Phaser.Physics.ARCADE;
-
+            
             var json = this.game.cache.getJSON('map1');
 
             this.sceneSetup(json, 0);
 
-            this.hero = new Hero(this.game, 100, 860, "shapes", 0);
+            this.hero = new Hero(this.game, this.spawnPoint.x, this.spawnPoint.y, "shapes", 0);
+
+            this.createFireballGroup(this.game);
+
+            this.game.time.events.add(Phaser.Timer.SECOND * 1, this.fireProjectile, this);
+
+            var style = { font: "12px Arial", fontSize: 15 , fill: "#DB9D4B", strokeThickness : 6, stroke : "", align: "center" };
 
             // console.log();
+            this.game.add.text(70, 750, 'WASD or arrow keys for movement', style);
+
+            this.game.add.text(680, 750, 'Space to shape shift', style);
+            
+            //this.game.add.text(900, 720, 'Some objects are moveable', style);
 
         }
 
@@ -49,6 +60,8 @@ module LD35 {
             this.game.physics.arcade.collide(this.hero, this.platformGateTileGroup);
 
             this.game.physics.arcade.collide(this.hero, this.exit, this.exitCollide, null, this);
+
+            this.game.physics.arcade.collide(this.hero, this.fireballGroup, this.heroFireBallContact, null, this);
         }
 
         render() {
@@ -70,7 +83,11 @@ module LD35 {
             }
         }
 
-        
+        heroFireBallContact(a, b) {
+            b.kill();
+            this.hero.body.x = this.spawnPoint.x;
+            this.hero.body.y = this.spawnPoint.y;
+        }
 
         removeCollide() {
             this.platformGateTileGroup.setAll("body.enable", false);
@@ -84,6 +101,21 @@ module LD35 {
 
                 this.game.state.start('level2', true, false);
             }
+        }
+
+        fireProjectile() {
+            
+            var block = this.shooterBlock[0];
+
+            var fb = this.fireballGroup.getFirstExists(false);
+
+            fb.reset(block.x, block.y + 40);
+
+            fb.rotation = 270 * Math.PI / 180;
+
+            fb.body.velocity.y = this.game.rnd.integerInRange(200, 250);
+            
+            this.game.time.events.add(Phaser.Timer.SECOND * 1, this.fireProjectile, this);
         }
     }
 }

@@ -68,8 +68,16 @@ module LD35 {
 
                 this.shapeindex = (this.shapeindex + 1) % this.maxShapes; // use modulus to wrap
 
-                this.frame = this.shapeindex;
-
+                // i introduced a space between sprites to avoid color bleed ...
+                if (this.shapeindex === 0)
+                    this.frame = 0;
+                else if (this.shapeindex === 1)
+                    this.frame = 2;
+                else if (this.shapeindex === 2)
+                    this.frame = 4;
+                else if (this.shapeindex === 3)
+                    this.frame = 6;
+                
                 this.shapeshifttimer = this.game.time.now + 250;
             }
         }

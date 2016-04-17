@@ -23,7 +23,19 @@ module LD35 {
 
         spawnPoint: Phaser.Point;
 
-        shooterBlock : Array<Phaser.Sprite>;
+        shooterBlock: Array<Phaser.Sprite>;
+
+        fireballGroup: Phaser.Group;
+        
+        createFireballGroup(game : Phaser.Game) {
+            // fire ball group
+            this.fireballGroup = game.add.group();
+            this.fireballGroup.enableBody = true;
+            this.fireballGroup.physicsBodyType = Phaser.Physics.ARCADE;
+            this.fireballGroup.createMultiple(20, 'tiles', 51, false);
+            this.fireballGroup.setAll('outOfBoundsKill', true);
+            this.fireballGroup.setAll('checkWorldBounds', true);
+        }
 
         sceneSetup(json: any, level: number) {
             // magic ensues

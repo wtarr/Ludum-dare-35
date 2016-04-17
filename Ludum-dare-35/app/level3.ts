@@ -6,7 +6,7 @@ module LD35 {
 
         unlocked: boolean;
 
-        fireballGroup: Phaser.Group;
+        
 
         switchA: boolean;
         switchB: boolean;
@@ -42,13 +42,7 @@ module LD35 {
             this.platformL3SwitchGroup.enableBody = true;
             this.platformL3SwitchGroup.physicsBodyType = Phaser.Physics.ARCADE;
 
-            // fire ball group
-            this.fireballGroup = this.game.add.group();
-            this.fireballGroup.enableBody = true;
-            this.fireballGroup.physicsBodyType = Phaser.Physics.ARCADE;
-            this.fireballGroup.createMultiple(20, 'tiles', 51, false);
-            this.fireballGroup.setAll('outOfBoundsKill', true);
-            this.fireballGroup.setAll('checkWorldBounds', true);
+            this.createFireballGroup(this.game);
 
             this.game.time.events.add(Phaser.Timer.SECOND * 1, this.fireProjectile, this);
 
@@ -63,9 +57,14 @@ module LD35 {
 
             this.switchA = false;
             this.switchB = false;
+
+            var style = { font: "12px Arial", fontSize: 15, fill: "#DB9D4B", strokeThickness: 6, stroke: "", align: "center" };
+
+            this.game.add.text(120, 150, 'some objects move!', style);
         }
 
         update() {
+            
             // Do collision checks between player and platform
             this.game.physics.arcade.collide(this.hero, this.platformCollidableTileGroup);
 
@@ -77,8 +76,10 @@ module LD35 {
 
             this.game.physics.arcade.collide(this.hero, this.platformGuessTileGroup, this.guessIsBeingTouched, null, this);
 
-            this.game.physics.arcade.collide(this.hero, this.platformMovableBlock);
-
+            if (this.hero.shapeindex === Shape.Triangle && this.hero.body.velocity.y === 0) {
+                this.game.physics.arcade.collide(this.hero, this.platformMovableBlock);
+            }
+            
             this.game.physics.arcade.collide(this.platformMovableBlock, this.platformCollidableTileGroup);
 
             this.game.physics.arcade.collide(this.platformMovableBlock, this.platformL3SwitchGroup, this.switchActivated, null, this);
@@ -88,10 +89,13 @@ module LD35 {
         }
 
         exitCollide() {
-            // todo
+            if (this.gateOpen) {
+                this.game.state.start('finish', true, false);
+            }
         }
 
-        heroFireBallContact() {
+        heroFireBallContact(a, b) {
+            b.kill();
             this.hero.body.x = this.spawnPoint.x;
             this.hero.body.y = this.spawnPoint.y;
         }

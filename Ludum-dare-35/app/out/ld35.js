@@ -71,7 +71,15 @@ var LD35;
             }
             if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && this.game.time.now > this.shapeshifttimer) {
                 this.shapeindex = (this.shapeindex + 1) % this.maxShapes; // use modulus to wrap
-                this.frame = this.shapeindex;
+                // i introduced a space between sprites to avoid color bleed ...
+                if (this.shapeindex === 0)
+                    this.frame = 0;
+                else if (this.shapeindex === 1)
+                    this.frame = 2;
+                else if (this.shapeindex === 2)
+                    this.frame = 4;
+                else if (this.shapeindex === 3)
+                    this.frame = 6;
                 this.shapeshifttimer = this.game.time.now + 250;
             }
         };
@@ -97,6 +105,15 @@ var LD35;
             _super.apply(this, arguments);
             this.gateOpen = false;
         }
+        Level.prototype.createFireballGroup = function (game) {
+            // fire ball group
+            this.fireballGroup = game.add.group();
+            this.fireballGroup.enableBody = true;
+            this.fireballGroup.physicsBodyType = Phaser.Physics.ARCADE;
+            this.fireballGroup.createMultiple(20, 'tiles', 51, false);
+            this.fireballGroup.setAll('outOfBoundsKill', true);
+            this.fireballGroup.setAll('checkWorldBounds', true);
+        };
         Level.prototype.sceneSetup = function (json, level) {
             // magic ensues
             var tileWidth = json.tilewidth;
@@ -229,8 +246,14 @@ var LD35;
             this.platformGateTileGroup.physicsBodyType = Phaser.Physics.ARCADE;
             var json = this.game.cache.getJSON('map1');
             this.sceneSetup(json, 0);
-            this.hero = new LD35.Hero(this.game, 100, 860, "shapes", 0);
+            this.hero = new LD35.Hero(this.game, this.spawnPoint.x, this.spawnPoint.y, "shapes", 0);
+            this.createFireballGroup(this.game);
+            this.game.time.events.add(Phaser.Timer.SECOND * 1, this.fireProjectile, this);
+            var style = { font: "12px Arial", fontSize: 15, fill: "#DB9D4B", strokeThickness: 6, stroke: "", align: "center" };
             // console.log();
+            this.game.add.text(70, 750, 'WASD or arrow keys for movement', style);
+            this.game.add.text(680, 750, 'Space to shape shift', style);
+            //this.game.add.text(900, 720, 'Some objects are moveable', style);
         };
         Level1.prototype.update = function () {
             // Do collision checks between player and platform
@@ -238,6 +261,7 @@ var LD35;
             this.game.physics.arcade.collide(this.hero, this.platformNonCollidableTileGroup, this.collide, null, this);
             this.game.physics.arcade.collide(this.hero, this.platformGateTileGroup);
             this.game.physics.arcade.collide(this.hero, this.exit, this.exitCollide, null, this);
+            this.game.physics.arcade.collide(this.hero, this.fireballGroup, this.heroFireBallContact, null, this);
         };
         Level1.prototype.render = function () {
         };
@@ -250,6 +274,11 @@ var LD35;
                 this.game.add.tween(this.platformGateTileGroup).to({ alpha: 0 }, 2000, "Linear", true, 0, 0, false).onComplete.add(this.removeCollide, this);
             }
         };
+        Level1.prototype.heroFireBallContact = function (a, b) {
+            b.kill();
+            this.hero.body.x = this.spawnPoint.x;
+            this.hero.body.y = this.spawnPoint.y;
+        };
         Level1.prototype.removeCollide = function () {
             this.platformGateTileGroup.setAll("body.enable", false);
             this.gateOpen = true;
@@ -259,6 +288,14 @@ var LD35;
                 //alert("go to next ->");
                 this.game.state.start('level2', true, false);
             }
+        };
+        Level1.prototype.fireProjectile = function () {
+            var block = this.shooterBlock[0];
+            var fb = this.fireballGroup.getFirstExists(false);
+            fb.reset(block.x, block.y + 40);
+            fb.rotation = 270 * Math.PI / 180;
+            fb.body.velocity.y = this.game.rnd.integerInRange(200, 250);
+            this.game.time.events.add(Phaser.Timer.SECOND * 1, this.fireProjectile, this);
         };
         return Level1;
     }(LD35.Level));
@@ -297,8 +334,13 @@ var LD35;
             var json = this.game.cache.getJSON('map1');
             this.sceneSetup(json, 1);
             // this.hero = new Hero(this.game, 100, 860, "shapes", 0);
-            this.hero = new LD35.Hero(this.game, 100, 100, "shapes", 0);
+            this.hero = new LD35.Hero(this.game, this.spawnPoint.x, this.spawnPoint.y, "shapes", 0);
             this.unlocked = false;
+            //  create the fireball group
+            this.createFireballGroup(this.game);
+            this.game.time.events.add(Phaser.Timer.SECOND * 1, this.fireProjectile, this);
+            var style = { font: "12px Arial", fontSize: 15, fill: "#DB9D4B", strokeThickness: 6, stroke: "", align: "center" };
+            this.game.add.text(100, 150, 'did you find the clue?', style);
         };
         Level2.prototype.update = function () {
             // Do collision checks between player and platform
@@ -307,6 +349,7 @@ var LD35;
             this.game.physics.arcade.collide(this.hero, this.platformGateTileGroup);
             this.game.physics.arcade.collide(this.hero, this.exit, this.exitCollide, null, this);
             this.game.physics.arcade.collide(this.hero, this.platformGuessTileGroup, this.guessIsBeingTouched, null, this);
+            this.game.physics.arcade.collide(this.hero, this.fireballGroup, this.heroFireBallContact, null, this);
         };
         Level2.prototype.render = function () {
         };
@@ -319,6 +362,20 @@ var LD35;
                 //alert("go to next ->");
                 this.game.state.start('level3', true, false);
             }
+        };
+        Level2.prototype.heroFireBallContact = function (a, b) {
+            b.kill();
+            this.hero.body.x = this.spawnPoint.x;
+            this.hero.body.y = this.spawnPoint.y;
+        };
+        Level2.prototype.fireProjectile = function () {
+            // pick one of the two blocks
+            var rand = this.game.rnd.integerInRange(0, 1);
+            var block = this.shooterBlock[rand];
+            var fb = this.fireballGroup.getFirstExists(false);
+            fb.reset(block.x, block.y);
+            fb.body.velocity.x = -1 * this.game.rnd.integerInRange(200, 250);
+            this.game.time.events.add(Phaser.Timer.SECOND * 1, this.fireProjectile, this);
         };
         Level2.prototype.guessIsBeingTouched = function (player, block) {
             var _this = this;
@@ -404,13 +461,7 @@ var LD35;
             this.platformL3SwitchGroup = this.game.add.group();
             this.platformL3SwitchGroup.enableBody = true;
             this.platformL3SwitchGroup.physicsBodyType = Phaser.Physics.ARCADE;
-            // fire ball group
-            this.fireballGroup = this.game.add.group();
-            this.fireballGroup.enableBody = true;
-            this.fireballGroup.physicsBodyType = Phaser.Physics.ARCADE;
-            this.fireballGroup.createMultiple(20, 'tiles', 51, false);
-            this.fireballGroup.setAll('outOfBoundsKill', true);
-            this.fireballGroup.setAll('checkWorldBounds', true);
+            this.createFireballGroup(this.game);
             this.game.time.events.add(Phaser.Timer.SECOND * 1, this.fireProjectile, this);
             var json = this.game.cache.getJSON('map1');
             this.sceneSetup(json, 2);
@@ -419,6 +470,8 @@ var LD35;
             this.unlocked = false;
             this.switchA = false;
             this.switchB = false;
+            var style = { font: "12px Arial", fontSize: 15, fill: "#DB9D4B", strokeThickness: 6, stroke: "", align: "center" };
+            this.game.add.text(120, 150, 'some objects move!', style);
         };
         Level3.prototype.update = function () {
             // Do collision checks between player and platform
@@ -427,16 +480,21 @@ var LD35;
             this.game.physics.arcade.collide(this.hero, this.platformGateTileGroup);
             this.game.physics.arcade.collide(this.hero, this.exit, this.exitCollide, null, this);
             this.game.physics.arcade.collide(this.hero, this.platformGuessTileGroup, this.guessIsBeingTouched, null, this);
-            this.game.physics.arcade.collide(this.hero, this.platformMovableBlock);
+            if (this.hero.shapeindex === LD35.Shape.Triangle && this.hero.body.velocity.y === 0) {
+                this.game.physics.arcade.collide(this.hero, this.platformMovableBlock);
+            }
             this.game.physics.arcade.collide(this.platformMovableBlock, this.platformCollidableTileGroup);
             this.game.physics.arcade.collide(this.platformMovableBlock, this.platformL3SwitchGroup, this.switchActivated, null, this);
             // collison between player and fireball
             this.game.physics.arcade.collide(this.hero, this.fireballGroup, this.heroFireBallContact, null, this);
         };
         Level3.prototype.exitCollide = function () {
-            // todo
+            if (this.gateOpen) {
+                this.game.state.start('finish', true, false);
+            }
         };
-        Level3.prototype.heroFireBallContact = function () {
+        Level3.prototype.heroFireBallContact = function (a, b) {
+            b.kill();
             this.hero.body.x = this.spawnPoint.x;
             this.hero.body.y = this.spawnPoint.y;
         };
@@ -532,6 +590,9 @@ var LD35;
         }
         Finish.prototype.create = function () {
             // todo ...
+            var style = { font: "12px Arial", fontSize: 15, fill: "#DB9D4B", strokeThickness: 6, stroke: "", align: "center" };
+            var text = this.game.add.text(this.game.canvas.width / 2, this.game.canvas.height / 2, 'You have finished!', style);
+            text.anchor.set(0.5);
         };
         return Finish;
     }(Phaser.State));
@@ -555,16 +616,27 @@ var LD35;
             _super.apply(this, arguments);
         }
         Boot.prototype.preload = function () {
-            this.game.load.spritesheet("shapes", "assets/spritebasic.png", 32, 32, 4);
+            this.game.load.spritesheet("shapes", "assets/spritebasic.png", 32, 32, 8);
             this.game.load.spritesheet("tiles", "assets/leveltiles.png", 32, 32, 64);
             this.game.load.json('map1', 'assets/map1.json');
         };
         Boot.prototype.create = function () {
             // called after preload so go to next
-            this.game.state.start("level3");
+            this.game.state.start("level1");
         };
         return Boot;
     }(Phaser.State));
     LD35.Boot = Boot;
+})(LD35 || (LD35 = {}));
+var LD35;
+(function (LD35) {
+    var StartScreen = (function (_super) {
+        __extends(StartScreen, _super);
+        function StartScreen() {
+            _super.apply(this, arguments);
+        }
+        return StartScreen;
+    }(Phaser.Sprite));
+    LD35.StartScreen = StartScreen;
 })(LD35 || (LD35 = {}));
 //# sourceMappingURL=ld35.js.map

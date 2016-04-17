@@ -45,9 +45,18 @@ module LD35 {
             this.sceneSetup(json, 1);
 
             // this.hero = new Hero(this.game, 100, 860, "shapes", 0);
-            this.hero = new Hero(this.game, 100, 100, "shapes", 0);
+            this.hero = new Hero(this.game, this.spawnPoint.x, this.spawnPoint.y, "shapes", 0);
 
             this.unlocked = false;
+
+            //  create the fireball group
+            this.createFireballGroup(this.game);
+
+            this.game.time.events.add(Phaser.Timer.SECOND * 1, this.fireProjectile, this);
+
+            var style = { font: "12px Arial", fontSize: 15, fill: "#DB9D4B", strokeThickness: 6, stroke: "", align: "center" };
+
+            this.game.add.text(100, 150, 'did you find the clue?', style);
         }
 
         update() {
@@ -62,7 +71,7 @@ module LD35 {
 
             this.game.physics.arcade.collide(this.hero, this.platformGuessTileGroup, this.guessIsBeingTouched, null, this);
 
-           
+            this.game.physics.arcade.collide(this.hero, this.fireballGroup, this.heroFireBallContact, null, this);
         }
 
         render() {
@@ -83,7 +92,27 @@ module LD35 {
             }
         }
 
+        heroFireBallContact(a, b) {
 
+            b.kill();
+            this.hero.body.x = this.spawnPoint.x;
+            this.hero.body.y = this.spawnPoint.y;
+        }
+
+        fireProjectile() {
+            // pick one of the two blocks
+            var rand = this.game.rnd.integerInRange(0, 1);
+
+            var block = this.shooterBlock[rand];
+
+            var fb = this.fireballGroup.getFirstExists(false);
+
+            fb.reset(block.x, block.y);
+
+            fb.body.velocity.x = -1 * this.game.rnd.integerInRange(200, 250);
+
+            this.game.time.events.add(Phaser.Timer.SECOND * 1, this.fireProjectile, this);
+        }
 
         guessIsBeingTouched(player: any, block: any) {
             // set in lock position with current shape
