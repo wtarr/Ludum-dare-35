@@ -27,6 +27,7 @@
     <Content Include="assets\ld35.mp3" />
     <Content Include="assets\leveltiles.png" />
     <Content Include="assets\spritebasic.png" />
+    <Content Include="assets\startscreen.png" />
     <Content Include="index.html" />
     <Content Include="lib\js\phaser.js" />
     <Content Include="web.config" />
